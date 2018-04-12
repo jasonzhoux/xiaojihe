@@ -1,56 +1,162 @@
+<wxs src="tools.wxs" module="tools" />
 <view class="container">
-    <view class="top-container">
-<image class="userinfo-avatar" src="{{userInfo.avatarUrl}}"></image>
-        <view class="top-info">
-<text>Username</text>
-<picker bindchange="bindPickerChange" value="{{Index}}" range="{{Region}}">
-<view class="regionselect">{{Region[Index]}}<view class="sign"></view>
-</view>
-</picker>
-<text>综合评分：1959</text>
-<text>综合分排名：#24.9w</text>
+  <view class="top-container">
+    <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}"></image>
+    <view class="top-info">
+      <text>{{Name}}</text>
+      <picker bindchange="bindPickerChange" value="{{Index}}" range="{{Region}}">
+        <view class="regionselect">{{Region[Index]}}
+          <view class="sign"></view>
         </view>
+      </picker>
+      <text>综合评分：1959</text>
+      <text>综合分排名：#24.9w</text>
     </view>
-    <view class="buttonselect">
-         <button>战斗统计</button><button>比赛记录</button><button>作弊分析</button>
+  </view>
+  <view class="buttonselect">
+    <button bindtap='showstatics'>战斗统计</button>
+    <button bindtap='showmatches'>比赛记录</button>
+    <button>作弊分析</button>
+  </view>
+
+  <view class="statics" style="display:{{staticsvisibility}}">
+    <view class="statics-title">
+      <text style="color:#63B8FF;">单人模式</text>
     </view>
-    <view class="statics">
-    <view class="statics-title"><text style="color:#63B8FF;">单人模式</text></view>
     <view class="statics-detail">
-    <view class="box" style="background-color:#63B8FF;color:white;"><text>{{Sinmode.rating}}</text><text>Rating</text></view>
-    <view class="box"><text>{{Sinmode.win}}</text><text>吃鸡数</text></view>
-    <view class="box"><text>{{Sinmode.topten}}</text><text>前十数</text></view>
-    <view class="box"><text>{{Sinmode.killsavg}}</text><text>场均击杀</text></view>
-    <view class="box" style="background-color:#63B8FF;color:white;"><text>{{Sinmode.ranks}}</text><text>排名</text></view>
-    <view class="box"><text>{{Sinmode.winrate}}</text><text>吃鸡率</text></view>
-    <view class="box"><text>{{Sinmode.toptenrate}}</text><text>前十率</text></view>
-    <view class="box"><text>{{Sinmode.kda}}</text><text>k/d</text></view>
+      <view class="box" style="background-color:#63B8FF;color:white;">
+        <text>{{Sinmode.rating}}</text>
+        <text>Rating</text>
+      </view>
+      <view class="box">
+        <text>{{Sinmode.win}}</text>
+        <text>吃鸡数</text>
+      </view>
+      <view class="box">
+        <text>{{Sinmode.topten}}</text>
+        <text>前十数</text>
+      </view>
+      <view class="box">
+        <text>{{Sinmode.killsavg}}</text>
+        <text>场均击杀</text>
+      </view>
+      <view class="box" style="background-color:#63B8FF;color:white;">
+        <text>{{Sinmode.ranks}}</text>
+        <text>排名</text>
+      </view>
+      <view class="box">
+        <text>{{Sinmode.winrate}}</text>
+        <text>吃鸡率</text>
+      </view>
+      <view class="box">
+        <text>{{Sinmode.toptenrate}}</text>
+        <text>前十率</text>
+      </view>
+      <view class="box">
+        <text>{{Sinmode.kda}}</text>
+        <text>k/d</text>
+      </view>
     </view>
+
+    <view class="statics-title">
+      <text style="color:#CD4F39;">双人模式</text>
     </view>
-    <view class="statics">
-    <view class="statics-title"><text style="color:#CD4F39;">双人模式</text></view>
     <view class="statics-detail">
-    <view class="box" style="background-color:#CD4F39;color:white;"><text>{{Duomode.rating}}</text><text>Rating</text></view>
-    <view class="box"><text>{{Duomode.win}}</text><text>吃鸡数</text></view>
-    <view class="box"><text>{{Duomode.topten}}</text><text>前十数</text></view>
-    <view class="box"><text>{{Duomode.killsavg}}</text><text>场均击杀</text></view>
-    <view class="box" style="background-color:#CD4F39;color:white;"><text>{{Duomode.ranks}}</text><text>排名</text></view>
-    <view class="box"><text>{{Duomode.winrate}}</text><text>吃鸡率</text></view>
-    <view class="box"><text>{{Duomode.toptenrate}}</text><text>前十率</text></view>
-    <view class="box"><text>{{Duomode.kda}}</text><text>k/d</text></view>
+      <view class="box" style="background-color:#CD4F39;color:white;">
+        <text>{{Duomode.rating}}</text>
+        <text>Rating</text>
+      </view>
+      <view class="box">
+        <text>{{Duomode.win}}</text>
+        <text>吃鸡数</text>
+      </view>
+      <view class="box">
+        <text>{{Duomode.topten}}</text>
+        <text>前十数</text>
+      </view>
+      <view class="box">
+        <text>{{Duomode.killsavg}}</text>
+        <text>场均击杀</text>
+      </view>
+      <view class="box" style="background-color:#CD4F39;color:white;">
+        <text>{{Duomode.ranks}}</text>
+        <text>排名</text>
+      </view>
+      <view class="box">
+        <text>{{Duomode.winrate}}</text>
+        <text>吃鸡率</text>
+      </view>
+      <view class="box">
+        <text>{{Duomode.toptenrate}}</text>
+        <text>前十率</text>
+      </view>
+      <view class="box">
+        <text>{{Duomode.kda}}</text>
+        <text>k/d</text>
+      </view>
     </view>
+
+    <view class="statics-title">
+      <text style="color:#EE9A00;">四人模式</text>
     </view>
-    <view class="statics">
-    <view class="statics-title"><text style="color:#EE9A00;">四人模式</text></view>
     <view class="statics-detail">
-    <view class="box" style="background-color:#EE9A00;color:white;"><text>{{Quamode.rating}}</text><text>Rating</text></view>
-    <view class="box"><text>{{Quamode.win}}</text><text>吃鸡数</text></view>
-    <view class="box"><text>{{Quamode.topten}}</text><text>前十数</text></view>
-    <view class="box"><text>{{Quamode.killsavg}}</text><text>场均击杀</text></view>
-    <view class="box" style="background-color:#EE9A00;color:white;"><text>{{Quamode.ranks}}</text><text>排名</text></view>
-    <view class="box"><text>{{Quamode.winrate}}</text><text>吃鸡率</text></view>
-    <view class="box"><text>{{Quamode.toptenrate}}</text><text>前十率</text></view>
-    <view class="box"><text>{{Quamode.kda}}</text><text>k/d</text></view>
+      <view class="box" style="background-color:#EE9A00;color:white;">
+        <text>{{Quamode.rating}}</text>
+        <text>Rating</text>
+      </view>
+      <view class="box">
+        <text>{{Quamode.win}}</text>
+        <text>吃鸡数</text>
+      </view>
+      <view class="box">
+        <text>{{Quamode.topten}}</text>
+        <text>前十数</text>
+      </view>
+      <view class="box">
+        <text>{{Quamode.killsavg}}</text>
+        <text>场均击杀</text>
+      </view>
+      <view class="box" style="background-color:#EE9A00;color:white;">
+        <text>{{Quamode.ranks}}</text>
+        <text>排名</text>
+      </view>
+      <view class="box">
+        <text>{{Quamode.winrate}}</text>
+        <text>吃鸡率</text>
+      </view>
+      <view class="box">
+        <text>{{Quamode.toptenrate}}</text>
+        <text>前十率</text>
+      </view>
+      <view class="box">
+        <text>{{Quamode.kda}}</text>
+        <text>k/d</text>
+      </view>
     </view>
+  </view>
+
+  <view class="matches" style="display:{{matchesvisibility}};width:100%" wx:for="{{matches}}">
+    <view class="weui-cells weui-cells_after-title" style="width:100%">
+      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__hd" wx:for="{{tools.queuehandle(item.queue_size)}}" style="position:absolute;left:{{item}}rpx;">
+          <image src="../../images/man.png" style="height:30rpx;width:30rpx;"></image>
+        </view>
+        <view class="weui-cell__bd">
+          <text class="sfont" style="position:absolute;left:25rpx;;top:60rpx">{{tools.getdate(item.started_at,time)}}</text>
+          <view style="position:absolute;left:150rpx;;top:20rpx">
+            #{{item.participant.stats.rank}}
+            <text class="sfont">/{{item.total_rank}}</text>
+          </view>
+          <text class="sfont" style="position:absolute;left:300rpx;;top:60rpx">排名变动</text>
+          <text style="position:absolute;left:300rpx;;top:20rpx">{{tools.getnum(item.participant.stats.rating_delta)}}</text>
+          <text class="sfont" style="position:absolute;left:450rpx;;top:60rpx">击杀</text>
+          <text style="position:absolute;left:450rpx;;top:20rpx">{{item.participant.stats.combat.kda.kills}}</text>
+          <text class="sfont" style="position:absolute;left:550rpx;;top:60rpx">伤害</text>
+          <text style="position:absolute;left:550rpx;;top:20rpx">{{tools.getnum(item.participant.stats.combat.damage.damage_dealt)}}</text>
+        </view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">详细</view>
+      </navigator>
     </view>
+  </view>
+
 </view>

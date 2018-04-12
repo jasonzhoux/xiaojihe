@@ -4,5 +4,5 @@
 <input class="search-input" name="nameinput" placeholder='请输入' />
 <button class="search-button" form-type='submit'>确定</button>
 </form>
-<view class="bottom">Copyright@2018 XiaoJiHe</view>
+<view class="weui-footer weui-footer_fixed-bottom">Copyright@2018 XiaoJiHe</view>
 </view>
