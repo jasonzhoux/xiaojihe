@@ -21,7 +21,7 @@ Page({
       success: function (res) {
         var Reg = /data-user_id="([0-9a-z]+)"/
         wx.navigateTo({
-          url: '../results/results?str=' + Reg.exec(res.data)[1]
+          url: '../results/results?str=' + Reg.exec(res.data)[1] +'&&usr=' + userName
         })
       },
       fail:function(res){

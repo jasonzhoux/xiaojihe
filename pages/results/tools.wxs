@@ -1,0 +1,48 @@
+var getnum = function(d){
+  return Math.round(d);
+}
+var queuehandle = function(d){
+  if(d==4){
+    return [15,45,75,105];
+  }
+  if(d==2){
+    return [15,45];
+  }
+  if(d==1){
+    return [15];
+  }
+}
+var getdate = function(d,t){
+  var reg = getRegExp('(\d{4})\-(\d{2})\-(\d{2})T(\d{2})\:(\d{2})')
+  var regt = getRegExp('(\d{4})\/(\d{2})\/(\d{2})\s(\d{2})\:(\d{2})')
+  var r = reg.exec(d)
+  var r2 = regt.exec(t)
+  var year = r[1]
+  var month = r[2]
+  var day = r[3]
+  var hour = r[4]
+  var min = r[5]
+  var temp
+  if(year<r2[1]){
+    temp = r2[1] - year
+    return temp+"年前"
+  }
+  else if(month<r2[2]){
+    temp = r2[2] - month
+    return temp+"月前"
+  }
+  else if(day<r2[3]){
+    temp = r2[3] - day
+    return temp+"天前"
+  }
+  else if(hour<r2[4]){
+    temp = r2[4] - hour
+    return temp+"小时前"
+  }
+  return "刚刚";
+}
+module.exports = {
+  getnum:getnum,
+  getdate:getdate,
+  queuehandle:queuehandle
+}

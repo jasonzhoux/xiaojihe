@@ -1,6 +1,6 @@
 // pages/search/search.js
 const app = getApp()
-
+var util = require('../../utils/util.js');
 Page({
 
   /**
@@ -8,7 +8,7 @@ Page({
    */
   data: {
     userInfo:{},
-    Name: {},
+    Name: '',
     Index:0,
     Region:['亚洲','欧洲','日韩','北美','东南亚'],
     userID:'',
@@ -41,7 +41,12 @@ Page({
       winrate: '',
       toptenrate: '',
       kda: ''
-    }
+    },
+    matches:{},
+    staticsvisibility:'flex',
+    matchesvisibility:'none',
+    getmatches:false,
+    time:''
   },
   /*
    * 事件
@@ -51,22 +56,39 @@ Page({
       Index: e.detail.value
     })
   }, 
-  RequestInfo:function(server,mode){
+  showstatics:function(e){
+    this.setData({
+      staticsvisibility:'flex',
+      matchesvisibility:'none'
+    })
+  },
+  showmatches:function(e){
+    if(this.data.getmatches){
+      this.setData({
+        staticsvisibility: 'none',
+        matchesvisibility: 'flex'
+      })
+    }
+    else{
     var that = this
     wx.request({
-      url: `https://pubg.op.gg/api/users/${this.data.userID}/ranked-stats?season=2018-04&&server=${server}&&queue_size=${mode}&&mode=tpp`,
+      url: `https://pubg.op.gg/api/users/${this.data.userID}/matches/recent?server=as`,
       header: {
         "Content-Type": "application/json"
       },
       success:function(res){
         that.setData(
           {
-            'Quamode.rating': res.data.stats.rating,
-            'Quamode.win': res.data.stats.win_matches_cnt
+            matches:res.data.matches.items,
+            staticsvisibility:'none',
+            matchesvisibility:'flex',
+            getmatches:true,
           }
         )
+        console.log(that.data.matches[0])
       }
     })
+    }
   },
   /**
    * 生命周期函数--监听页面加载
@@ -74,7 +96,9 @@ Page({
   onLoad: function (options) {
     this.setData({
       userInfo:app.globalData.userInfo,
-      userID:options.str
+      userID:options.str,
+      time: util.formatTime(new Date()),
+      Name:options.usr
     })
     var that = this
     var server = "as"

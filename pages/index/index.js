@@ -10,11 +10,7 @@ Page({
     canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
   //事件处理函数
-  clickbutton:function(){
-    wx.navigateTo({
-      url: '../search/search',
-    })
-  },
+
   onLoad: function () {
     if (app.globalData.userInfo) {
       this.setData({
