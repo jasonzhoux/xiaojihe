@@ -16,16 +16,28 @@ Page({
   formSubmit: function (e) {
     var that = this
     var userName = e.detail.value['nameinput']
-    wx.request({
-      url: `https://pubg.op.gg/user/${userName}?server=as`,
-      success: function (res) {
-        var Reg = /data-user_id="([0-9a-z]+)"/
-        wx.navigateTo({
-          url: '../results/results?str=' + Reg.exec(res.data)[1] +'&&usr=' + userName
-        })
+    /*wx.request({
+      url: `https://api.playbattlegrounds.com/shards/pc-as/players?filter[playerNames]=${userName}`,
+      header:{
+        accept:'application/vnd.api+json',
+        Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI0MmMxYThkMC0xOWUxLTAxMzYtOThlNy02MWFjOTE3MDJiMmEiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNTIyODEwNDAyLCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6InhpYW9qaWhlIiwic2NvcGUiOiJjb21tdW5pdHkiLCJsaW1pdCI6MTB9.mEMO1Y_XsBUIwe8TLzVenTJBXhRGL4qwwZaLDQHvzs4'
       },
-      fail:function(res){
-        console.log("no such user")
+      success: function (res) {
+        console.log(res)
+        wx.navigateTo({
+          url: '../results/results?str=' + res.data.data.user_id + '&&usr=' + userName
+        })
+      }
+    })*/
+    wx.request({
+      url: 'http://pubg.ctcuu.com/player',
+      data:{
+        nickname:userName
+      },
+      success:function(res){
+        wx.navigateTo({
+          url: '../results/results?str=' + res.data.data.user_id + '&&usr=' + userName
+      })
       }
     })
   },

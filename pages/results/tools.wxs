@@ -12,6 +12,22 @@ var queuehandle = function(d){
     return [15];
   }
 }
+var compare = function () {
+  var temp = arguments[0]
+  for (i = 1; i < arguments.length; i++) {
+    if (temp < arguments[i]) {
+      temp = arguments[i]
+    }
+  }
+  return temp
+}
+var sum = function () {
+  var sum = 0
+  for (i = 0; i < arguments.length; i++) {
+    sum += arguments[i]
+  }
+  return sum
+}
 var getdate = function(d,t){
   var reg = getRegExp('(\d{4})\-(\d{2})\-(\d{2})T(\d{2})\:(\d{2})')
   var regt = getRegExp('(\d{4})\/(\d{2})\/(\d{2})\s(\d{2})\:(\d{2})')
@@ -41,8 +57,15 @@ var getdate = function(d,t){
   }
   return "刚刚";
 }
+var rate = function(a,b){
+  var x = (a/(b==0?(b+1):b)).toFixed(2)
+  return x
+}
 module.exports = {
   getnum:getnum,
   getdate:getdate,
-  queuehandle:queuehandle
+  queuehandle:queuehandle,
+  rate:rate,
+  sum: sum,
+  compare: compare
 }

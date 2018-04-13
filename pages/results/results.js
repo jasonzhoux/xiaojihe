@@ -13,66 +13,168 @@ Page({
     Region:['亚洲','欧洲','日韩','北美','东南亚'],
     userID:'',
     Sinmode:{
-      rating:'',
-      win:'',
-      topten:'',
-      killsavg:'',
-      ranks:'',
-      winrate:'',
-      toptenrate:'',
-      kda:''
     },
     Duomode:{
-      rating: '',
-      win: '',
-      topten: '',
-      killsavg: '',
-      ranks: '',
-      winrate: '',
-      toptenrate: '',
-      kda: ''
     },
     Quamode:{
-      rating: '',
-      win: '',
-      topten: '',
-      killsavg: '',
-      ranks: '',
-      winrate: '',
-      toptenrate: '',
-      kda: ''
     },
     matches:{},
     staticsvisibility:'flex',
     matchesvisibility:'none',
+    analysisvisibility:'none',
     getmatches:false,
-    time:''
+    time:'',
+    template: {
+    "stats": {
+      "matches_cnt": 0,
+      "win_matches_cnt": 0,
+      "topten_matches_cnt": 0,
+      "kills_sum": 0,
+      "kills_max": 0,
+      "assists_sum": 0,
+      "headshot_kills_sum": 0,
+      "deaths_sum": 0,
+      "longest_kill_max": 0,
+      "rank_avg": 0,
+      "damage_dealt_avg": 0,
+      "time_survived_avg": 0,
+      "rating": 0
+    },
+    "ranks": {
+      "rating": 0
+    },
+    "max_ranks": {
+      "rating": 0
+    }
+  },
+  region:'as'
   },
   /*
    * 事件
    */
-  bindPickerChange: function (e) {
+  regionchange:function(e){
     this.setData({
-      Index: e.detail.value
+      Index: e.detail.value,
+      getmatches:false,
+      staticsvisibility: 'flex',
+      matchesvisibility: 'none',
+      analysisvisibility: 'none',
     })
-  }, 
+    switch(e.detail.value){
+      case '0':this.inforequest('as',1)
+        this.inforequest('as', 2)
+        this.inforequest('as', 4)
+        this.setData({ region:'as'})
+        break;
+      case '1': this.inforequest('eu', 1)
+        this.inforequest('eu', 2)
+        this.inforequest('eu', 4)
+        this.setData({ region: 'eu' })
+        break;
+      case '2': this.inforequest('krjp', 1)
+        this.inforequest('krjp', 2)
+        this.inforequest('krjp', 4)
+        this.setData({ region: 'krjp' })
+        break;
+      case '3':
+      this.inforequest('na', 1)
+        this.inforequest('na', 2)
+        this.inforequest('na', 4)
+        this.setData({ region: 'na' })
+        break;
+      case '4': this.inforequest('sea', 1)
+        this.inforequest('sea', 2)
+        this.inforequest('sea', 4)
+        this.setData({ region: 'sea' })
+        break;
+      default:console.log("no")
+      break;
+    }
+  },
+
+  inforequest:function(server,mode){
+    var that = this
+    wx.request({
+      url: `https://pubg.op.gg/api/users/${this.data.userID}/ranked-stats?season=2018-04&&server=${server}&&queue_size=${mode}&&mode=tpp`,
+      header: {
+        "Content-Type": "application/json"
+      },
+      success: function (res) {
+        switch(mode){
+          case 1: if (res.statusCode == '404') {
+            that.setData({
+              'Sinmode': that.data.template
+            })
+          }
+          else {
+            that.setData(
+              {
+                'Sinmode': res.data
+              }
+            )
+          }
+          break;
+          case 2: if (res.statusCode == '404') {
+            that.setData({
+              'Duomode': that.data.template
+            })
+          }
+          else {
+            that.setData(
+              {
+                'Duomode': res.data
+              }
+            )
+          }
+          break;
+          case 4: if (res.statusCode == '404') {
+            that.setData({
+              'Quamode': that.data.template
+            })
+          }
+          else {
+            that.setData(
+              {
+                'Quamode': res.data
+              }
+            )
+          }
+          break;
+          default:console.log("no data")
+          break;
+        }
+      },
+      fail: function () {
+        console.log("failed")
+      }
+    })
+  },
+  showanalysis: function (e) {
+    this.setData({
+      staticsvisibility: 'none',
+      matchesvisibility: 'none',
+      analysisvisibility:'flex',
+    })
+  },
   showstatics:function(e){
     this.setData({
       staticsvisibility:'flex',
-      matchesvisibility:'none'
+      matchesvisibility:'none',
+      analysisvisibility:'none',
     })
   },
   showmatches:function(e){
     if(this.data.getmatches){
       this.setData({
         staticsvisibility: 'none',
-        matchesvisibility: 'flex'
+        matchesvisibility: 'flex',
+        analysisvisibility:'none',
       })
     }
     else{
     var that = this
     wx.request({
-      url: `https://pubg.op.gg/api/users/${this.data.userID}/matches/recent?server=as`,
+      url: `https://pubg.op.gg/api/users/${this.data.userID}/matches/recent?server=${this.data.region}`,
       header: {
         "Content-Type": "application/json"
       },
@@ -100,27 +202,32 @@ Page({
       time: util.formatTime(new Date()),
       Name:options.usr
     })
+    console.log(this.data.userID)
     var that = this
     var server = "as"
     var mode = 4
     wx.request({
       url: `https://pubg.op.gg/api/users/${this.data.userID}/ranked-stats?season=2018-04&&server=${server}&&queue_size=${mode}&&mode=tpp`,
       header: {
-        "Content-Type": "application/json"
+        "Content-Type": "json"
       },
       success: function (res) {
+        if(res.statusCode=='404'){
+          that.setData({
+            'Quamode': that.data.template
+          })
+        }
+        else{
         that.setData(
           {
-            'Quamode.rating': res.data.stats.rating,
-            'Quamode.win': res.data.stats.win_matches_cnt,
-            'Quamode.topten': res.data.stats.topten_matches_cnt,
-            'Quamode.killsavg': (res.data.stats.kills_sum / res.data.stats.matches_cnt).toFixed(2),
-            'Quamode.ranks': res.data.ranks.rating,
-            'Quamode.winrate': (res.data.stats.win_matches_cnt / res.data.stats.matches_cnt).toFixed(2),
-            'Quamode.toptenrate': (res.data.stats.topten_matches_cnt / res.data.stats.matches_cnt).toFixed(2),
-            'Quamode.kda': (res.data.stats.kills_sum / res.data.stats.deaths_sum).toFixed(2)
+            'Quamode': res.data
           }
         )
+        console.log(res)
+        }
+      },
+      fail:function(){
+        console.log("failed")
       }
     })
     mode = 1
@@ -130,18 +237,23 @@ Page({
         "Content-Type": "application/json"
       },
       success: function (res) {
+        if (res.statusCode == '404') {
+          that.setData({
+            'Sinmode': that.data.template
+          })
+          console.log(that.data.Sinmode)
+        }
+        else{
         that.setData(
           {
-            'Sinmode.rating': res.data.stats.rating,
-            'Sinmode.win': res.data.stats.win_matches_cnt,
-            'Sinmode.topten': res.data.stats.topten_matches_cnt,
-            'Sinmode.killsavg': (res.data.stats.kills_sum / res.data.stats.matches_cnt).toFixed(2),
-            'Sinmode.ranks': res.data.ranks.rating,
-            'Sinmode.winrate': (res.data.stats.win_matches_cnt / res.data.stats.matches_cnt).toFixed(2),
-            'Sinmode.toptenrate': (res.data.stats.topten_matches_cnt / res.data.stats.matches_cnt).toFixed(2),
-            'Sinmode.kda': (res.data.stats.kills_sum / res.data.stats.deaths_sum).toFixed(2)
+            'Sinmode':res.data
           }
         )
+        console.log(res)
+        }
+      },
+      fail: function () {
+        console.log(failed)
       }
     })
     mode = 2
@@ -151,40 +263,22 @@ Page({
         "Content-Type": "application/json"
       },
       success: function (res) {
+        if (res.statusCode == '404') {
+          that.setData({
+            'Duomode': that.data.template
+          })
+        }
+        else{
         that.setData(
           {
-            'Duomode.rating': res.data.stats.rating,
-            'Duomode.win': res.data.stats.win_matches_cnt,
-            'Duomode.topten': res.data.stats.topten_matches_cnt,
-            'Duomode.killsavg': (res.data.stats.kills_sum / res.data.stats.matches_cnt).toFixed(2),
-            'Duomode.ranks': res.data.ranks.rating,
-            'Duomode.winrate': (res.data.stats.win_matches_cnt / res.data.stats.matches_cnt).toFixed(2),
-            'Duomode.toptenrate': (res.data.stats.topten_matches_cnt / res.data.stats.matches_cnt).toFixed(2),
-            'Duomode.kda': (res.data.stats.kills_sum / res.data.stats.deaths_sum).toFixed(2)
+            'Duomode':res.data
           }
-        )
+        )}
+      },
+      fail: function () {
+        console.log("failed")
       }
     })
-    /*wx.request({
-      url: `https://pubg.op.gg/api/users/${this.data.userID}/ranked-stats?season=2018-04&&server=as&&queue_size=4&&mode=tpp`,
-      header: {
-        "Content-Type": "application/json"
-      },
-      success:function (res){
-        var Rating = res.data.stats.rating
-        var chicks = res.data.stats.win_matches_cnt
-        var topten = res.data.stats.topten_matches_cnt
-        var killmax = res.data.stats.kills_max
-        var killsum = res.data.stats.kills_sum
-        var matchsum = res.data.stats.matches_cnt
-        var headshotsum = res.data.stats.headshot_kills_sum
-        var deathsum = res.data.stats.deaths_sum
-        var rank = res.data.ranks.rating
-        var max_rank = res.data.max_ranks.rating
-        console.log(Rating)
-      }
-    })*/
-
   },
 
   /**

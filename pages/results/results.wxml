@@ -1,10 +1,11 @@
 <wxs src="tools.wxs" module="tools" />
+<wxs src="analysis.wxs" module="analysis" />
 <view class="container">
   <view class="top-container">
-    <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}"></image>
+    <image class="img" src="../../images/background.jpg" mode="widthFix"></image>
     <view class="top-info">
-      <text>{{Name}}</text>
-      <picker bindchange="bindPickerChange" value="{{Index}}" range="{{Region}}">
+      <text style="font-size:50rpx;color:white;">{{Name}}</text>
+      <picker value="{{Index}}" range="{{Region}}" bindchange="regionchange">
         <view class="regionselect">{{Region[Index]}}
           <view class="sign"></view>
         </view>
@@ -16,7 +17,7 @@
   <view class="buttonselect">
     <button bindtap='showstatics'>战斗统计</button>
     <button bindtap='showmatches'>比赛记录</button>
-    <button>作弊分析</button>
+    <button bindtap='showanalysis'>作弊分析</button>
   </view>
 
   <view class="statics" style="display:{{staticsvisibility}}">
@@ -25,35 +26,35 @@
     </view>
     <view class="statics-detail">
       <view class="box" style="background-color:#63B8FF;color:white;">
-        <text>{{Sinmode.rating}}</text>
+        <text>{{Sinmode.stats.rating}}</text>
         <text>Rating</text>
       </view>
       <view class="box">
-        <text>{{Sinmode.win}}</text>
+        <text>{{Sinmode.stats.win_matches_cnt}}</text>
         <text>吃鸡数</text>
       </view>
       <view class="box">
-        <text>{{Sinmode.topten}}</text>
+        <text>{{Sinmode.stats.topten_matches_cnt}}</text>
         <text>前十数</text>
       </view>
       <view class="box">
-        <text>{{Sinmode.killsavg}}</text>
+        <text>{{tools.rate(Sinmode.stats.kills_sum,Sinmode.stats.matches_cnt)}}</text>
         <text>场均击杀</text>
       </view>
       <view class="box" style="background-color:#63B8FF;color:white;">
-        <text>{{Sinmode.ranks}}</text>
+        <text>{{Sinmode.ranks.rating}}</text>
         <text>排名</text>
       </view>
       <view class="box">
-        <text>{{Sinmode.winrate}}</text>
+        <text>{{tools.rate(Sinmode.stats.win_matches_cnt,Sinmode.stats.matches_cnt)}}</text>
         <text>吃鸡率</text>
       </view>
       <view class="box">
-        <text>{{Sinmode.toptenrate}}</text>
+        <text>{{tools.rate(Sinmode.stats.topten_matches_cnt,Sinmode.stats.matches_cnt)}}</text>
         <text>前十率</text>
       </view>
       <view class="box">
-        <text>{{Sinmode.kda}}</text>
+        <text>{{tools.rate(Sinmode.stats.kills_sum,Sinmode.stats.deaths_sum)}}</text>
         <text>k/d</text>
       </view>
     </view>
@@ -63,35 +64,35 @@
     </view>
     <view class="statics-detail">
       <view class="box" style="background-color:#CD4F39;color:white;">
-        <text>{{Duomode.rating}}</text>
+        <text>{{Duomode.stats.rating}}</text>
         <text>Rating</text>
       </view>
       <view class="box">
-        <text>{{Duomode.win}}</text>
+        <text>{{Duomode.stats.win_matches_cnt}}</text>
         <text>吃鸡数</text>
       </view>
       <view class="box">
-        <text>{{Duomode.topten}}</text>
+        <text>{{Duomode.stats.topten_matches_cnt}}</text>
         <text>前十数</text>
       </view>
       <view class="box">
-        <text>{{Duomode.killsavg}}</text>
+        <text>{{tools.rate(Duomode.stats.kills_sum,Duomode.stats.matches_cnt)}}</text>
         <text>场均击杀</text>
       </view>
       <view class="box" style="background-color:#CD4F39;color:white;">
-        <text>{{Duomode.ranks}}</text>
+        <text>{{Duomode.ranks.rating}}</text>
         <text>排名</text>
       </view>
       <view class="box">
-        <text>{{Duomode.winrate}}</text>
+        <text>{{tools.rate(Duomode.stats.win_matches_cnt,Duomode.stats.matches_cnt)}}</text>
         <text>吃鸡率</text>
       </view>
       <view class="box">
-        <text>{{Duomode.toptenrate}}</text>
+        <text>{{tools.rate(Duomode.stats.topten_matches_cnt,Duomode.stats.matches_cnt)}}</text>
         <text>前十率</text>
       </view>
       <view class="box">
-        <text>{{Duomode.kda}}</text>
+        <text>{{tools.rate(Duomode.stats.kills_sum,Duomode.stats.deaths_sum)}}</text>
         <text>k/d</text>
       </view>
     </view>
@@ -101,35 +102,35 @@
     </view>
     <view class="statics-detail">
       <view class="box" style="background-color:#EE9A00;color:white;">
-        <text>{{Quamode.rating}}</text>
+        <text>{{Quamode.stats.rating}}</text>
         <text>Rating</text>
       </view>
       <view class="box">
-        <text>{{Quamode.win}}</text>
+        <text>{{Quamode.stats.win_matches_cnt}}</text>
         <text>吃鸡数</text>
       </view>
       <view class="box">
-        <text>{{Quamode.topten}}</text>
+        <text>{{Quamode.stats.topten_matches_cnt}}</text>
         <text>前十数</text>
       </view>
       <view class="box">
-        <text>{{Quamode.killsavg}}</text>
+        <text>{{tools.rate(Quamode.stats.kills_sum,Quamode.stats.matches_cnt)}}</text>
         <text>场均击杀</text>
       </view>
       <view class="box" style="background-color:#EE9A00;color:white;">
-        <text>{{Quamode.ranks}}</text>
+        <text>{{Quamode.ranks.rating}}</text>
         <text>排名</text>
       </view>
       <view class="box">
-        <text>{{Quamode.winrate}}</text>
+        <text>{{tools.rate(Quamode.stats.win_matches_cnt,Quamode.stats.matches_cnt)}}</text>
         <text>吃鸡率</text>
       </view>
       <view class="box">
-        <text>{{Quamode.toptenrate}}</text>
+        <text>{{tools.rate(Quamode.stats.topten_matches_cnt,Quamode.stats.matches_cnt)}}</text>
         <text>前十率</text>
       </view>
       <view class="box">
-        <text>{{Quamode.kda}}</text>
+        <text>{{tools.rate(Quamode.stats.kills_sum,Quamode.stats.deaths_sum)}}</text>
         <text>k/d</text>
       </view>
     </view>
@@ -159,4 +160,9 @@
     </view>
   </view>
 
+  <view class="analysis" style="display:{{analysisvisibility}}">
+  <text>
+  {{analysis.analysis(tools.sum(Quamode.stats.win_matches_cnt,Duomode.stats.win_matches_cnt,Sinmode.stats.win_matches_cnt),tools.sum(Quamode.stats.topten_matches_cnt,Duomode.stats.topten_matches_cnt,Sinmode.stats.topten_matches_cnt),tools.compare(Quamode.stats.kills_max,Duomode.stats.kills_max,Sinmode.stats.kills_max),tools.sum(Quamode.stats.kills_sum,Duomode.stats.kills_sum,Sinmode.stats.kills_sum),tools.sum(Quamode.stats.matches_cnt,Duomode.stats.matches_cnt,Sinmode.stats.matches_cnt),tools.sum(Quamode.stats.headshot_kills_sum,Duomode.stats.headshot_kills_sum,Sinmode.stats.headshot_kills_sum),tools.sum(Quamode.stats.deaths_sum,Duomode.stats.deaths_sum,Sinmode.stats.deaths_sum))}}
+  </text>
+  </view>
 </view>
