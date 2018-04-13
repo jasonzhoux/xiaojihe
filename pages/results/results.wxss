@@ -9,22 +9,15 @@
   border-style: solid;
   border-color: black;
 }
-.userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  position:absolute;
-  top:65rpx;
-  left:50rpx;
-  border-width:5rpx;
-  border-style: solid;
-  border-color: black;
-}
 .top-container{
+  position:relative; 
   display:flex;
+  width:100%;
   margin-bottom:50rpx;
   align-content: flex-start;
 }
 .top-info{
+  position: relative;
   display:flex;
   flex-direction: column;
   margin:10rpx;
@@ -71,3 +64,9 @@
   font-size: 25rpx;
   color: grey;
 }
+.img{
+position:absolute;  
+z-index:-1;  
+width:100%;
+height: 100%;
+} 
