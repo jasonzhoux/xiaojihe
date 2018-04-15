@@ -8,12 +8,14 @@ Page({
     Games:{},
     Avatar:{},
     Name:{},
-    userID:''
+    userID:'',
+    hidden:true
   },
 
   /*事件
   */
   formSubmit: function (e) {
+    this.setData({hidden:false})
     var that = this
     var userName = e.detail.value['nameinput']
     /*wx.request({
@@ -35,9 +37,26 @@ Page({
         nickname:userName
       },
       success:function(res){
+        that.setData({
+          hidden: true
+        })
         wx.navigateTo({
           url: '../results/results?str=' + res.data.data.user_id + '&&usr=' + userName
       })
+      },
+      fail:function(){
+        that.setData({
+          hidden:true
+        })
+        wx.showModal({
+          content: '没有找到数据呢，请确保用户名输入正确哦',
+          showCancel: false,
+          success: function (res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            }
+          }
+        })
       }
     })
   },

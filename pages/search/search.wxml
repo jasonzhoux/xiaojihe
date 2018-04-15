@@ -2,7 +2,10 @@
 <image class="logo" src="logo.jpg"></image>
 <form bindsubmit='formSubmit'>
 <input class="search-input" name="nameinput" placeholder='请输入' />
-<button class="search-button" form-type='submit'>确定</button>
+<button class="search-button weui-btn" form-type='submit' type="default">确定</button>
 </form>
+<loading hidden="{{hidden}}">
+        加载中...
+</loading>
 <view class="weui-footer weui-footer_fixed-bottom">Copyright@2018 XiaoJiHe</view>
 </view>

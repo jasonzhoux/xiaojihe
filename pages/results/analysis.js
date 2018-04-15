@@ -6,7 +6,23 @@ var killsum = 130;
 var matchsum = 13;
 var headshotsum = 60;
 var deathsum = 3;*/
-var analysis = function(chicks,topten,killmax,killsum,matchsum,headshotsum,deathsum) {
+var compare = function () {
+  var temp = arguments[0]
+  for (var i = 1; i < arguments.length; i++) {
+    if (temp < arguments[i]) {
+      temp = arguments[i]
+    }
+  }
+  return temp
+}
+var sum = function () {
+  var sum = 0
+  for (var i = 0; i < arguments.length; i++) {
+    sum += arguments[i]
+  }
+  return sum
+}
+var analysis = function (chicks, topten, killmax, killsum, matchsum, headshotsum, deathsum){
 
   var weight = 0;
 
@@ -173,18 +189,58 @@ var analysis = function(chicks,topten,killmax,killsum,matchsum,headshotsum,death
   var analy = analy_headshot * weight_headshot + analy_chicks * weight_chicks + analy_topten * weight_topten + analy_kda * weight_kda + analy_killmax * weight_killmax;
 
   //alert(analy);
-
+  var specialtreatment = false;
   if (matchsum >= 15 && (killmax >= 20 || kda > 15 || headshotrate >= 0.6 || chicksrate >= 0.6)) {
-    return 0.99;
+    analy = 0.99;
+    specialtreatment = true;
   }
   else if (analy >= 0.99) {
-    return 0.99;
+    analy = 0.99;
   }
   else {
-    return analy;
+    analy = analy.toFixed(2);
+  }
+
+  var result = {
+    "specialtreatment": specialtreatment,
+    "analy": analy,
+    "static": {
+
+      "analy_headshot": analy_headshot,
+      "analy_chicks": analy_chicks,
+      "analy_topten": analy_topten,
+      "analy_kda": analy_kda,
+      "analy_killmax": analy_killmax
+    }
+
+  }
+  return result;
+
+}
+
+
+function chg2level(value) {
+  value = value.toFixed(2);
+  if (value < 0 || value > 1.00) {
+    return false;
+  }
+  else if (value >= 0 && value < 0.20) {
+    return "never";
+  }
+  else if (value >= 0.20 && value < 0.50) {
+    return "normal";
+  }
+  else if (value >= 0.50 && value < 0.85) {
+    return "almost";
+  }
+  else if (value >= 0.85 && value <= 1.00) {
+    return "extreme"
   }
 
 }
+
 module.exports = {
-  analysis:analysis
+  analysis:analysis,
+  compare:compare,
+  sum:sum
 }
