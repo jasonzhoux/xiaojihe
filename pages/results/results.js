@@ -1,70 +1,92 @@
 // pages/search/search.js
 const app = getApp()
 var util = require('../../utils/util.js');
+var analysis = require('./analysis.js');
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    userInfo:{},
+    userInfo: {},
     Name: '',
-    Index:0,
-    Region:['亚洲','欧洲','日韩','北美','东南亚'],
-    userID:'',
-    Sinmode:{
+    Index: 0,
+    Region: ['亚洲', '欧洲', '日韩', '北美', '东南亚'],
+    userID: '',
+    Sinmode: {
     },
-    Duomode:{
+    Duomode: {
     },
-    Quamode:{
+    Quamode: {
     },
-    matches:{},
-    staticsvisibility:'flex',
-    matchesvisibility:'none',
-    analysisvisibility:'none',
-    getmatches:false,
-    time:'',
+    matches: {},
+    staticsvisibility: 'flex',
+    matchesvisibility: 'none',
+    analysisvisibility: 'none',
+    getmatches: false,
+    time: '',
     template: {
-    "stats": {
-      "matches_cnt": 0,
-      "win_matches_cnt": 0,
-      "topten_matches_cnt": 0,
-      "kills_sum": 0,
-      "kills_max": 0,
-      "assists_sum": 0,
-      "headshot_kills_sum": 0,
-      "deaths_sum": 0,
-      "longest_kill_max": 0,
-      "rank_avg": 0,
-      "damage_dealt_avg": 0,
-      "time_survived_avg": 0,
-      "rating": 0
+      "stats": {
+        "matches_cnt": 0,
+        "win_matches_cnt": 0,
+        "topten_matches_cnt": 0,
+        "kills_sum": 0,
+        "kills_max": 0,
+        "assists_sum": 0,
+        "headshot_kills_sum": 0,
+        "deaths_sum": 0,
+        "longest_kill_max": 0,
+        "rank_avg": 0,
+        "damage_dealt_avg": 0,
+        "time_survived_avg": 0,
+        "rating": 0
+      },
+      "ranks": {
+        "rating": 0
+      },
+      "max_ranks": {
+        "rating": 0
+      }
     },
-    "ranks": {
-      "rating": 0
-    },
-    "max_ranks": {
-      "rating": 0
+    region: 'as',
+    result: {
+      "specialtreatment": '',
+      "analy": '',
+      "static": {
+
+        "analy_headshot": '',
+        "analy_chicks": '',
+        "analy_topten": '',
+        "analy_kda": '',
+        "analy_killmax": ''
+      }
+
     }
-  },
-  region:'as'
   },
   /*
    * 事件
    */
-  regionchange:function(e){
+  getanalysis: function () {
+    var
+      r = analysis.analysis(analysis.sum(this.data.Quamode.stats.win_matches_cnt, this.data.Duomode.stats.win_matches_cnt, this.data.Sinmode.stats.win_matches_cnt), analysis.sum(this.data.Quamode.stats.topten_matches_cnt, this.data.Duomode.stats.topten_matches_cnt, this.data.Sinmode.stats.topten_matches_cnt), analysis.compare(this.data.Quamode.stats.kills_max, this.data.Duomode.stats.kills_max, this.data.Sinmode.stats.kills_max), analysis.sum(this.data.Quamode.stats.kills_sum, this.data.Duomode.stats.kills_sum, this.data.Sinmode.stats.kills_sum), analysis.sum(this.data.Quamode.stats.matches_cnt, this.data.Duomode.stats.matches_cnt, this.data.Sinmode.stats.matches_cnt), analysis.sum(this.data.Quamode.stats.headshot_kills_sum, this.data.Duomode.stats.headshot_kills_sum, this.data.Sinmode.stats.headshot_kills_sum), analysis.sum(this.data.Quamode.stats.deaths_sum, this.data.Duomode.stats.deaths_sum, this.data.Sinmode.stats.deaths_sum))
+      console.log("2")
+    this.setData({
+      result: r
+    })
+  },
+  regionchange: function (e) {
     this.setData({
       Index: e.detail.value,
-      getmatches:false,
+      getmatches: false,
       staticsvisibility: 'flex',
       matchesvisibility: 'none',
       analysisvisibility: 'none',
     })
-    switch(e.detail.value){
-      case '0':this.inforequest('as',1)
+    switch (e.detail.value) {
+      case '0': this.inforequest('as', 1)
         this.inforequest('as', 2)
         this.inforequest('as', 4)
-        this.setData({ region:'as'})
+        this.setData({ region: 'as' })
         break;
       case '1': this.inforequest('eu', 1)
         this.inforequest('eu', 2)
@@ -77,7 +99,7 @@ Page({
         this.setData({ region: 'krjp' })
         break;
       case '3':
-      this.inforequest('na', 1)
+        this.inforequest('na', 1)
         this.inforequest('na', 2)
         this.inforequest('na', 4)
         this.setData({ region: 'na' })
@@ -87,12 +109,12 @@ Page({
         this.inforequest('sea', 4)
         this.setData({ region: 'sea' })
         break;
-      default:console.log("no")
-      break;
+      default: console.log("no")
+        break;
     }
   },
 
-  inforequest:function(server,mode){
+  inforequest: function (server, mode) {
     var that = this
     wx.request({
       url: `https://pubg.op.gg/api/users/${this.data.userID}/ranked-stats?season=2018-04&&server=${server}&&queue_size=${mode}&&mode=tpp`,
@@ -100,7 +122,7 @@ Page({
         "Content-Type": "application/json"
       },
       success: function (res) {
-        switch(mode){
+        switch (mode) {
           case 1: if (res.statusCode == '404') {
             that.setData({
               'Sinmode': that.data.template
@@ -113,7 +135,7 @@ Page({
               }
             )
           }
-          break;
+            break;
           case 2: if (res.statusCode == '404') {
             that.setData({
               'Duomode': that.data.template
@@ -126,7 +148,7 @@ Page({
               }
             )
           }
-          break;
+            break;
           case 4: if (res.statusCode == '404') {
             that.setData({
               'Quamode': that.data.template
@@ -139,9 +161,9 @@ Page({
               }
             )
           }
-          break;
-          default:console.log("no data")
-          break;
+            break;
+          default: console.log("no data")
+            break;
         }
       },
       fail: function () {
@@ -150,46 +172,48 @@ Page({
     })
   },
   showanalysis: function (e) {
+    this.getanalysis()
     this.setData({
       staticsvisibility: 'none',
       matchesvisibility: 'none',
-      analysisvisibility:'flex',
+      analysisvisibility: 'flex',
     })
   },
-  showstatics:function(e){
+  showstatics: function (e) {
     this.setData({
-      staticsvisibility:'flex',
-      matchesvisibility:'none',
-      analysisvisibility:'none',
+      staticsvisibility: 'flex',
+      matchesvisibility: 'none',
+      analysisvisibility: 'none', 
     })
   },
-  showmatches:function(e){
-    if(this.data.getmatches){
+  showmatches: function (e) {
+    if (this.data.getmatches) {
       this.setData({
         staticsvisibility: 'none',
         matchesvisibility: 'flex',
-        analysisvisibility:'none',
+        analysisvisibility: 'none',
       })
     }
-    else{
-    var that = this
-    wx.request({
-      url: `https://pubg.op.gg/api/users/${this.data.userID}/matches/recent?server=${this.data.region}`,
-      header: {
-        "Content-Type": "application/json"
-      },
-      success:function(res){
-        that.setData(
-          {
-            matches:res.data.matches.items,
-            staticsvisibility:'none',
-            matchesvisibility:'flex',
-            getmatches:true,
-          }
-        )
-        console.log(that.data.matches[0])
-      }
-    })
+    else {
+      var that = this
+      wx.request({
+        url: `https://pubg.op.gg/api/users/${this.data.userID}/matches/recent?server=${this.data.region}`,
+        header: {
+          "Content-Type": "application/json"
+        },
+        success: function (res) {
+          that.setData(
+            {
+              matches: res.data.matches.items,
+              staticsvisibility: 'none',
+              matchesvisibility: 'flex',
+              analysisvisibility: 'none',
+              getmatches: true,
+            }
+          )
+          console.log(that.data.matches[0])
+        }
+      })
     }
   },
   /**
@@ -197,10 +221,10 @@ Page({
    */
   onLoad: function (options) {
     this.setData({
-      userInfo:app.globalData.userInfo,
-      userID:options.str,
+      userInfo: app.globalData.userInfo,
+      userID: options.str,
       time: util.formatTime(new Date()),
-      Name:options.usr
+      Name: options.usr
     })
     console.log(this.data.userID)
     var that = this
@@ -212,21 +236,21 @@ Page({
         "Content-Type": "json"
       },
       success: function (res) {
-        if(res.statusCode=='404'){
+        if (res.statusCode == '404') {
           that.setData({
             'Quamode': that.data.template
           })
         }
-        else{
-        that.setData(
-          {
-            'Quamode': res.data
-          }
-        )
-        console.log(res)
+        else {
+          that.setData(
+            {
+              'Quamode': res.data
+            }
+          )
+          console.log(res)
         }
       },
-      fail:function(){
+      fail: function () {
         console.log("failed")
       }
     })
@@ -243,13 +267,13 @@ Page({
           })
           console.log(that.data.Sinmode)
         }
-        else{
-        that.setData(
-          {
-            'Sinmode':res.data
-          }
-        )
-        console.log(res)
+        else {
+          that.setData(
+            {
+              'Sinmode': res.data
+            }
+          )
+          console.log(res)
         }
       },
       fail: function () {
@@ -268,12 +292,13 @@ Page({
             'Duomode': that.data.template
           })
         }
-        else{
-        that.setData(
-          {
-            'Duomode':res.data
-          }
-        )}
+        else {
+          that.setData(
+            {
+              'Duomode': res.data
+            }
+          )
+        }
       },
       fail: function () {
         console.log("failed")

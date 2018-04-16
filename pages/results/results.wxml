@@ -1,23 +1,22 @@
 <wxs src="tools.wxs" module="tools" />
-<wxs src="analysis.wxs" module="analysis" />
 <view class="container">
   <view class="top-container">
     <image class="img" src="../../images/background.jpg" mode="widthFix"></image>
     <view class="top-info">
-      <text style="font-size:50rpx;color:white;">{{Name}}</text>
+      <text style="font-size:50rpx;">{{Name}}</text>
       <picker value="{{Index}}" range="{{Region}}" bindchange="regionchange">
         <view class="regionselect">{{Region[Index]}}
           <view class="sign"></view>
         </view>
       </picker>
-      <text>综合评分：1959</text>
-      <text>综合分排名：#24.9w</text>
+      <text>最高评分：{{tools.compare(Sinmode.stats.rating,Duomode.stats.rating,Quamode.stats.rating)}}</text>
+      <text>最高排名：#{{tools.smallcompare(Sinmode.ranks.rating,Duomode.ranks.rating,Quamode.ranks.rating)}}</text>
     </view>
   </view>
   <view class="buttonselect">
-    <button bindtap='showstatics'>战斗统计</button>
-    <button bindtap='showmatches'>比赛记录</button>
-    <button bindtap='showanalysis'>作弊分析</button>
+    <button bindtap='showstatics' style="width:240rpx;">战斗统计</button>
+    <button bindtap='showmatches' style="width:240rpx;">比赛记录</button>
+    <button bindtap='showanalysis' style="width:240rpx;">作弊分析</button>
   </view>
 
   <view class="statics" style="display:{{staticsvisibility}}">
@@ -138,31 +137,36 @@
 
   <view class="matches" style="display:{{matchesvisibility}};width:100%" wx:for="{{matches}}">
     <view class="weui-cells weui-cells_after-title" style="width:100%">
-      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active" style="height:110rpx;">
         <view class="weui-cell__hd" wx:for="{{tools.queuehandle(item.queue_size)}}" style="position:absolute;left:{{item}}rpx;">
           <image src="../../images/man.png" style="height:30rpx;width:30rpx;"></image>
         </view>
         <view class="weui-cell__bd">
-          <text class="sfont" style="position:absolute;left:25rpx;;top:60rpx">{{tools.getdate(item.started_at,time)}}</text>
-          <view style="position:absolute;left:150rpx;;top:20rpx">
+          <text class="sfont" style="position:absolute;left:30rpx;;top:90rpx">{{tools.getdate(item.started_at,time)}}</text>
+          <view style="position:absolute;left:150rpx;;top:50rpx">
             #{{item.participant.stats.rank}}
             <text class="sfont">/{{item.total_rank}}</text>
           </view>
-          <text class="sfont" style="position:absolute;left:300rpx;;top:60rpx">排名变动</text>
-          <text style="position:absolute;left:300rpx;;top:20rpx">{{tools.getnum(item.participant.stats.rating_delta)}}</text>
-          <text class="sfont" style="position:absolute;left:450rpx;;top:60rpx">击杀</text>
-          <text style="position:absolute;left:450rpx;;top:20rpx">{{item.participant.stats.combat.kda.kills}}</text>
-          <text class="sfont" style="position:absolute;left:550rpx;;top:60rpx">伤害</text>
-          <text style="position:absolute;left:550rpx;;top:20rpx">{{tools.getnum(item.participant.stats.combat.damage.damage_dealt)}}</text>
+          <text class="sfont" style="position:absolute;left:300rpx;;top:90rpx">排名变动</text>
+          <text style="position:absolute;left:300rpx;;top:50rpx">{{tools.getnum(item.participant.stats.rating_delta)}}</text>
+          <text class="sfont" style="position:absolute;left:450rpx;;top:90rpx">击杀</text>
+          <text style="position:absolute;left:450rpx;;top:50rpx">{{item.participant.stats.combat.kda.kills}}</text>
+          <text class="sfont" style="position:absolute;left:550rpx;;top:90rpx">伤害</text>
+          <text style="position:absolute;left:550rpx;;top:50rpx">{{tools.getnum(item.participant.stats.combat.damage.damage_dealt)}}</text>
         </view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">详细</view>
       </navigator>
     </view>
   </view>
 
-  <view class="analysis" style="display:{{analysisvisibility}}">
-  <text>
-  {{analysis.analysis(tools.sum(Quamode.stats.win_matches_cnt,Duomode.stats.win_matches_cnt,Sinmode.stats.win_matches_cnt),tools.sum(Quamode.stats.topten_matches_cnt,Duomode.stats.topten_matches_cnt,Sinmode.stats.topten_matches_cnt),tools.compare(Quamode.stats.kills_max,Duomode.stats.kills_max,Sinmode.stats.kills_max),tools.sum(Quamode.stats.kills_sum,Duomode.stats.kills_sum,Sinmode.stats.kills_sum),tools.sum(Quamode.stats.matches_cnt,Duomode.stats.matches_cnt,Sinmode.stats.matches_cnt),tools.sum(Quamode.stats.headshot_kills_sum,Duomode.stats.headshot_kills_sum,Sinmode.stats.headshot_kills_sum),tools.sum(Quamode.stats.deaths_sum,Duomode.stats.deaths_sum,Sinmode.stats.deaths_sum))}}
-  </text>
+  <view class="analysis" style="display:{{analysisvisibility}};">
+  综合作弊指数:<progress percent='{{tools.toPercent(result.analy)}}' stroke-width='8' active='true' color='{{tools.toColor(result.analy)}}' />
+  爆头指数：<progress percent='{{tools.toPercent(result.static.analy_headshot)}}' stroke-width='8' active='true' color='{{tools.toColor(result.static.analy_headshot)}}' />
+  吃鸡指数：<progress percent='{{tools.toPercent(result.static.analy_chicks)}}' stroke-width='8' active color='{{tools.toColor(result.static.analy_chicks)}}' />
+  前十指数：<progress percent='{{tools.toPercent(result.static.analy_topten)}}' stroke-width='8' active='true' color='{{tools.toColor(result.static.analy_topten)}}' />
+  kda指数：<progress percent='{{tools.toPercent(result.static.analy_kda)}}' stroke-width='8' active='true' color='{{tools.toColor(result.static.analy_kda)}}' />
+  最大击杀指数：<progress percent='{{tools.toPercent(result.static.analy_killmax)}}' stroke-width='8' active='true' color='{{tools.toColor(result.static.analy_killmax)}}' />
   </view>
+          <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+            <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+        </view>
 </view>
