@@ -183,7 +183,7 @@ Page({
     this.setData({
       staticsvisibility: 'flex',
       matchesvisibility: 'none',
-      analysisvisibility: 'none',
+      analysisvisibility: 'none', 
     })
   },
   showmatches: function (e) {
@@ -207,6 +207,7 @@ Page({
               matches: res.data.matches.items,
               staticsvisibility: 'none',
               matchesvisibility: 'flex',
+              analysisvisibility: 'none',
               getmatches: true,
             }
           )

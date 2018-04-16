@@ -32,7 +32,16 @@ Page({
       }
     })*/
     wx.request({
-      url: 'http://pubg.ctcuu.com/player',
+      url: `https://pubg.op.gg/user/${userName}?server=as`,
+      success: function (res) {
+        that.setData({
+          hidden: true
+        })
+        var Reg = /data-user_id="([0-9a-z]+)"/
+        wx.navigateTo({
+          url: '../results/results?str=' + Reg.exec(res.data)[1]+'&&usr=' + userName
+        })},
+      /*url: 'http://pubg.ctcuu.com/player',
       data:{
         nickname:userName
       },
@@ -43,7 +52,7 @@ Page({
         wx.navigateTo({
           url: '../results/results?str=' + res.data.data.user_id + '&&usr=' + userName
       })
-      },
+      },*/
       fail:function(){
         that.setData({
           hidden:true

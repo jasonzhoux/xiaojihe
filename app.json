@@ -27,5 +27,8 @@
         "selectedIconPath": "images/search_2.png"
       }
     ]
+  },
+  "networkTimeout":{
+    "request":20000
   }
 }
